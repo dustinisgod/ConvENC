@@ -16,7 +16,7 @@ local charLevel = mq.TLO.Me.Level()
 local NOT_MEZZABLE_EXPIRATION = 30  -- Expiration duration in seconds for `notMezzableQueue` entries
 local MEZ_RECHECK_THRESHOLD = 8     -- Recheck only when mez duration is < 5 seconds
 
-local DEBUG_MODE = true
+local DEBUG_MODE = false
 -- Debug print helper function
 local function debugPrint(...)
     if DEBUG_MODE then

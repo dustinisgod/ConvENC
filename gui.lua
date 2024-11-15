@@ -7,7 +7,7 @@ local config = {}
 
 local gui = {}
 
-gui.isOpen = true
+gui.isOpen = false
 
 local DEBUG_MODE = true
 -- Debug print helper function
@@ -35,7 +35,7 @@ local function setDefaultConfig()
     gui.mezStopPercent = 95
     gui.slowOn = false
     gui.tashOn = false
-    gui.debuffOn = false
+    gui.crippleOn = false
     gui.buffOn = false
     gui.buffGroup = false
     gui.buffRaid = false

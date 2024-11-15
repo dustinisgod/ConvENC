@@ -10,82 +10,39 @@ local function debugPrint(...)
 end
 
 local spells = {
-    Tash = {
-	    {level = 57, name = "Tashanian"},
-        {level = 41, name = "Tashania"},
-        {level = 18, name = "Tashani"},
-        {level = 2, name = "Tashina"}
+    Stun1 = {
+        {level = 7, name = "Cease"}
     },
-    Mez = {
-	    {level = 54, name = "Glamour of Kintaz"},
-        {level = 52, name = "Fascination"},
-        {level = 47, name = "Dazzle"},
-		{level = 13, name = "Enthrall"},
-        {level = 2, name = "Mesmerize"}
+    Stun2 = {
+        {level = 13, name = "Desist"}
     },
-	Slow = {
-        {level = 57, name = "Forlorn Deeds"},
-        {level = 53, name = "Cripple"},
-        {level = 41, name = "Shiftless Deeds"},
-        {level = 36, name = "Insipid Weakness"},
-        {level = 23, name = "Tepid Deeds"},
-        {level = 9, name = "Languid Pace"}
+    DmgUndead = {
+        {level = 54, name = "Expel Undead"},
+        {level = 46, name = "Dismiss Undead"},
+        {level = 30, name = "Expulse Undead"},
+        {level = 14, name = "Ward Undead"}
     },
-    Cripple = {
-        {level = 53, name = "Cripple"},
-		{level = 42, name = "Weakness"},
-		{level = 40, name = "Incapacitate"},
-        {level = 36, name = "Insipid Weakness"},
-        {level = 23, name = "Listless Power"},
-		{level = 16, name = "Disempower"},
-        {level = 9, name = "Ebbing Strength"},
-        {level = 4, name = "Enfeeblement"},
-        {level = 1, name = "Weaken"}
+    CombatAtk = {
+        {level = 59, name = "Yaulp IV"},
+        {level = 56, name = "Yaulp III"},
+        {level = 38, name = "Yaulp II"},
+        {level = 9, name = "Yaulp"}
     },
-    Charm = {
-	    {level = 53, name = "Boltran's Agacerie"},
-        {level = 46, name = "Allure"},
-        {level = 37, name = "Cajoling Whispers"},
-        {level = 30, name = "Entrance"},
-        {level = 23, name = "Beguile"},
-        {level = 11, name = "Charm"}
+    SelfProcBuff = {
+        {level = 45, name = "Divine Might"}
     },
-    ManaRegen = {
-        {level = 60, name = "Koadic's Endless Intellect"},
-        {level = 56, name = "Gift of Pure Thought"},
-		{level = 42, name = "Boon of the Clear Mind"},
-        {level = 26, name = "Clarity"},
-        {level = 14, name = "Breeze"}
+    HPBuff = {
+        {level = 60, name = "Brell's Mountainous Barrier"},
+        {level = 60, name = "Divine Strength"},
+        {level = 60, name = "Divine Brawn"},
+        {level = 55, name = "Divine Favor"}
     },
-	Haste = {
-        {level = 60, name = "Visions of Grandeur"},
-        {level = 58, name = "Wondrous Rapidity"},
-        {level = 47, name = "Swift Like the Wind"},
-		{level = 39, name = "Celerity"},
-        {level = 28, name = "Augmentation"},
-		{level = 21, name = "Alacrity"},
-		{level = 15, name = "Quickness"}
+    SelfShielding = {
+        {level = 60, name = "Armor of the Crusader"}
     },
-    MagicResistBuff = {
-        {level = 48, name = "Group Resist Magic"},
-        {level = 37, name = "Resist Magic"},
-		{level = 17, name = "Endure Magic"}
-    },
-    IntWisBuff = {
-        {level = 57, name = "Enlightenment"},
-        {level = 41, name = "Brilliance"},
-        {level = 35, name = "Insight"}
-    },
-	ACBuff = {
-	    {level = 54, name = "Shield of the Magi"},
-	    {level = 40, name = "Arch Shielding"},
-        {level = 31, name = "Greater Shielding"},
-	    {level = 23, name = "Major Shielding"},
-        {level = 16, name = "Shielding"},
-	    {level = 10, name = "Minor Shielding"},
-        {level = 9, name = "Lesser Shielding"},
-        {level = 1, name = "Minor Shielding"}
-	}
+    Resurrection = {
+        {level = 22, name = "Reanimation"}
+    }
 }
 
 -- Function to find the best spell for a given type and level
@@ -130,35 +87,29 @@ end
 function spells.loadDefaultSpells(charLevel)
     local defaultSpells = {}
 
-    if gui.tashOn and charLevel >= 2 then
-        defaultSpells[1] = spells.findBestSpell("Tash", charLevel)
+    if gui.tashOn and charLevel >= 7 then
+        defaultSpells[1] = spells.findBestSpell("Stun1", charLevel)
     end
-    if gui.mezOn and charLevel >= 2 then
-        defaultSpells[2] = spells.findBestSpell("Mez", charLevel)
+    if gui.mezOn and charLevel >= 13 then
+        defaultSpells[2] = spells.findBestSpell("Stun2", charLevel)
     end
-    if gui.slowOn and charLevel >= 9 then
-        defaultSpells[3] = spells.findBestSpell("Slow", charLevel)
+    if gui.slowOn and charLevel >= 14 then
+        defaultSpells[3] = spells.findBestSpell("DmgUndead", charLevel)
     end
-    if gui.debuffOn and charLevel >= 2 then
-        defaultSpells[4] = spells.findBestSpell("Cripple", charLevel)
+    if gui.debuffOn and charLevel >= 9 then
+        defaultSpells[4] = spells.findBestSpell("CombatAtk", charLevel)
     end
-    if gui.charmOn and charLevel >= 11 then
-        defaultSpells[5] = spells.findBestSpell("Charm", charLevel)
+    if gui.charmOn and charLevel >= 45 then
+        defaultSpells[5] = spells.findBestSpell("SelfProcBuff", charLevel)
     end
-    if gui.intWisBuff and charLevel >= 35 then
-        defaultSpells[6] = spells.findBestSpell("IntWisBuff", charLevel)
+    if gui.intWisBuff and charLevel >= 55 then
+        defaultSpells[6] = spells.findBestSpell("HPBuff", charLevel)
     end
-    if gui.manaRegen and charLevel >= 14 then
-        defaultSpells[7] = spells.findBestSpell("ManaRegen", charLevel)
+    if gui.manaRegen and charLevel >= 60 then
+        defaultSpells[7] = spells.findBestSpell("SelfShielding", charLevel)
     end
-    if gui.hasteBuff and charLevel >= 15 then
-        defaultSpells[8] = spells.findBestSpell("Haste", charLevel)
-    end
-    if gui.magicResistBuff and charLevel >= 17 then
-        defaultSpells[9] = spells.findBestSpell("MagicResistBuff", charLevel)
-    end
-    if charLevel > 0 then
-        defaultSpells[10] = spells.findBestSpell("ACBuff", charLevel)
+    if gui.hasteBuff and charLevel >= 22 then
+        defaultSpells[8] = spells.findBestSpell("Resurrection", charLevel)
     end
     return defaultSpells
 end
