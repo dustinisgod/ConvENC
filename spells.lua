@@ -48,14 +48,14 @@ local spells = {
         {level = 23, name = "Beguile"},
         {level = 11, name = "Charm"}
     },
-    ManaRegen = {
+    ManaRegenBuff = {
         {level = 60, name = "Koadic's Endless Intellect"},
         {level = 56, name = "Gift of Pure Thought"},
 		{level = 42, name = "Boon of the Clear Mind"},
         {level = 26, name = "Clarity"},
         {level = 14, name = "Breeze"}
     },
-	Haste = {
+	HasteBuff = {
         {level = 60, name = "Visions of Grandeur"},
         {level = 58, name = "Wondrous Rapidity"},
         {level = 47, name = "Swift Like the Wind"},
@@ -95,14 +95,14 @@ function spells.findBestSpell(spellType, charLevel)
     if charLevel == 60 and mq.TLO.Me.Book("Koadic's Endless Intellect")() and spellType == "IntWisBuff" then
         return nil
     end
-    if spellType == "ManaRegen" and charLevel == 60 then
+    if spellType == "ManaRegenBuff" and charLevel == 60 then
         if mq.TLO.Me.Book("Koadic's Endless Intellect")() then
             return "Koadic's Endless Intellect"
         else
             return "Gift of Pure Thought"
         end
     end
-    if spellType == "Haste" and charLevel == 60 then
+    if spellType == "HasteBuff" and charLevel == 60 then
         if mq.TLO.Me.Book("Visions of Grandeur")() then
             return "Visions of Grandeur"
         else
@@ -128,7 +128,7 @@ function spells.loadDefaultSpells(charLevel)
     if gui.slowOn and charLevel >= 9 then
         defaultSpells[3] = spells.findBestSpell("Slow", charLevel)
     end
-    if gui.debuffOn and charLevel >= 2 then
+    if gui.crippleOn and charLevel >= 2 then
         defaultSpells[4] = spells.findBestSpell("Cripple", charLevel)
     end
     if gui.charmOn and charLevel >= 11 then
@@ -138,10 +138,10 @@ function spells.loadDefaultSpells(charLevel)
         defaultSpells[6] = spells.findBestSpell("IntWisBuff", charLevel)
     end
     if gui.manaRegen and charLevel >= 14 then
-        defaultSpells[7] = spells.findBestSpell("ManaRegen", charLevel)
+        defaultSpells[7] = spells.findBestSpell("ManaRegenBuff", charLevel)
     end
     if gui.hasteBuff and charLevel >= 15 then
-        defaultSpells[8] = spells.findBestSpell("Haste", charLevel)
+        defaultSpells[8] = spells.findBestSpell("HasteBuff", charLevel)
     end
     if gui.magicResistBuff and charLevel >= 17 then
         defaultSpells[9] = spells.findBestSpell("MagicResistBuff", charLevel)

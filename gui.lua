@@ -7,9 +7,9 @@ local config = {}
 
 local gui = {}
 
-gui.isOpen = false
+gui.isOpen = true
 
-local DEBUG_MODE = true
+local DEBUG_MODE = false
 -- Debug print helper function
 local function debugPrint(...)
     if DEBUG_MODE then
@@ -30,17 +30,17 @@ local function setDefaultConfig()
     gui.chaseDistance = 20
     gui.mezOn = false
     gui.mezTashOn = false
-    gui.mezAmount = 3
+    gui.mezAmount = 2
     gui.mezRadius = 50
     gui.mezStopPercent = 95
     gui.slowOn = false
     gui.tashOn = false
     gui.crippleOn = false
-    gui.buffOn = false
+    gui.buffsOn = false
     gui.buffGroup = false
     gui.buffRaid = false
     gui.hasteBuff = false
-    gui.manaRegen = false
+    gui.manaRegenBuff = false
     gui.intWisBuff = false
     gui.magicResistBuff = false
     gui.sitMed = false
@@ -286,8 +286,8 @@ local function controlGUI()
         end
 
         if ImGui.CollapsingHeader("Buff Settings") then
-            gui.buffOn = ImGui.Checkbox("Buffs", gui.buffOn or false)
-            if gui.buffOn then
+            gui.buffsOn = ImGui.Checkbox("Buffs", gui.buffsOn or false)
+            if gui.buffsOn then
 
                 ImGui.Spacing()
 
@@ -311,7 +311,7 @@ local function controlGUI()
 
                 ImGui.Spacing()
 
-                gui.manaRegen = ImGui.Checkbox("Mana Regen", gui.manaRegen or false)
+                gui.manaRegenBuff = ImGui.Checkbox("Mana Regen", gui.manaRegenBuff or false)
 
                 ImGui.Spacing()
 

@@ -54,12 +54,28 @@ end
 -- On/Off Commands
 local function setBotOnOff(value) setToggleOption("botOn", value, "Bot") end
 local function setSwitchWithMA(value) setToggleOption("switchWithMA", value, "Switch with MA") end
+local function setBuffGroup(value) setToggleOption("buffGroup", value, "Buff Group") end
+local function setBuffRaid(value) setToggleOption("buffRaid", value, "Buff Raid") end
+local function setBuffs(value) setToggleOption("buffsOn", value, "Buffs") end
+local function setHasteBuff(value) setToggleOption("hasteBuff", value, "Haste Buff") end
+local function setManaRegenBuff(value) setToggleOption("manaRegenBuff", value, "Mana Regen Buff") end
+local function setIntWisBuff(value) setToggleOption("intWisBuff", value, "Int/Wis Buff") end
+local function setMagicResistBuff(value) setToggleOption("magicResistBuff", value, "Magic Resist Buff") end
+local function setTash(value) setToggleOption("tashOn", value, "Tash") end
+local function setSlow(value) setToggleOption("slowOn", value, "Slow") end
+local function setCripple(value) setToggleOption("crippleOn", value, "Cripple") end
+local function setMez(value) setToggleOption("mezOn", value, "Mez") end
+local function setTashMez(value) setToggleOption("mezTashOn", value, "Tash Mez") end
 
 -- Numeric Commands
 local function setMezRadius(value) setNumericOption("mezRadius", value, "MezRadius") end
 local function setMezStopPercent(value) setNumericOption("mezStopPercent", value, "MezStopPct") end
 local function setMezAmount(value) setNumericOption("mezAmount", value, "MezAmount") end
+local function setSitMedOnOff(value) setToggleOption("sitMed", value, "Sit to Med") end
 
+local function setBuffsOn(value)
+    setToggleOption("buffsOn", value, "Buffs On")
+end
 
 -- Combined function for setting main assist, range, and percent
 local function setAssist(name, range, percent)
@@ -198,20 +214,53 @@ local function commandHandler(command, ...)
             chaseValue = chaseValue .. " " .. args[2]
         end
         setChaseOnOff(chaseValue)
+    elseif command == "mez" then
+        setMez(args[1])
     elseif command == "mezradius" then
         setMezRadius(args[1])
+    elseif command == "tashmez" then
+        setTashMez(args[1])
     elseif command == "mezstoppercent" then
         setMezStopPercent(args[1])
     elseif command == "mezamount" then
         setMezAmount(args[1])
     elseif command == "mezignore" then
         setMezIgnore(args[1], args[2])
+    elseif command == "sitmed" then
+        setSitMedOnOff(args[1])
+    elseif command == "buffs" then
+        setBuffs(args[1])
+    elseif command == "buffgroup" then
+        setBuffGroup(args[1])
+    elseif command == "buffraid" then
+        setBuffRaid(args[1])
+    elseif command == "haste" then
+        setHasteBuff(args[1])
+    elseif command == "manaregen" then
+        setManaRegenBuff(args[1])
+    elseif command == "intwis" then
+        setIntWisBuff(args[1])
+    elseif command == "magicresist" then
+        setMagicResistBuff(args[1])
+    elseif command == "tash" then
+        setTash(args[1])
+    elseif command == "slow" then
+        setSlow(args[1])
+    elseif command == "cripple" then
+        setCripple(args[1])
     end
 end
 
 function commands.init()
     -- Single binding for the /convENC command
     mq.bind('/convENC', function(command, ...)
+        commandHandler(command, ...)
+    end)
+end
+
+function commands.initALL()
+    -- Single binding for the /convBRD command
+    mq.bind('/convALL', function(command, ...)
         commandHandler(command, ...)
     end)
 end

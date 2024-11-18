@@ -27,15 +27,14 @@ local currentLevel = mq.TLO.Me.Level()
 
 utils.PluginCheck()
 
-mq.cmd('/assist off')
+mq.cmd('/squelch /assist off')
 
 mq.imgui.init('controlGUI', gui.controlGUI)
 
 commands.init()
+commands.initALL()
 
 local startupRun = false
-
--- Function to check the botOn status and run startup once
 local function checkBotOn(currentLevel)
     if gui.botOn and not startupRun then
         -- Run the startup function once
@@ -95,7 +94,7 @@ while gui.controlGUI do
             cripple.crippleRoutine()
         end
 
-        if gui.buffOn then
+        if gui.buffsOn then
             utils.monitorBuffs()
          end
 

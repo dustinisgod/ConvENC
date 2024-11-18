@@ -19,8 +19,8 @@ end
 
 -- Define which classes are eligible for each buff type
 local buffEligibleClasses = {
-    ManaRegen = {CLR = true, DRU = true, SHM = true, NEC = true, WIZ = true, MAG = true, SHD = true, ENC = true, BST = true, RNG = true, PAL = true},
-    Haste = {WAR = true, MNK = true, ROG = true, PAL = true, SHD = true, BRD = true, BST = true, BER = true},
+    ManaRegenBuff = {CLR = true, DRU = true, SHM = true, NEC = true, WIZ = true, MAG = true, SHD = true, ENC = true, BST = true, RNG = true, PAL = true},
+    hasteBuff = {WAR = true, MNK = true, ROG = true, PAL = true, SHD = true, BRD = true, BST = true, BER = true},
     IntWisBuff = {CLR = true, DRU = true, SHM = true, NEC = true, WIZ = true, MAG = true, SHD = true, ENC = true, BST = true, RNG = true, PAL = true},
     MagicResistBuff = {ALL = true},
     ACBuff = {ALL = true}
@@ -90,7 +90,7 @@ end
 function buffer.buffRoutine()
     debugPrint("DEBUG: Entering buffRoutine")
 
-    if not (gui.botOn and gui.buffOn) then
+    if not (gui.botOn and gui.buffsOn) then
         debugPrint("DEBUG: Bot or Buff is off. Exiting buffRoutine.")
         return
     end
@@ -118,8 +118,8 @@ function buffer.buffRoutine()
 
     -- Determine which buffs to apply based on GUI settings
     local spellTypes = {}
-    if gui.manaRegen then table.insert(spellTypes, "ManaRegen") end
-    if gui.hasteBuff then table.insert(spellTypes, "Haste") end
+    if gui.manaRegenBuff then table.insert(spellTypes, "ManaRegenBuff") end
+    if gui.hasteBuff then table.insert(spellTypes, "HasteBuff") end
     if gui.intWisBuff then table.insert(spellTypes, "IntWisBuff") end
     if gui.magicResistBuff then table.insert(spellTypes, "MagicResistBuff") end
     if gui.acBuff then table.insert(spellTypes, "ACBuff") end
@@ -157,7 +157,7 @@ function buffer.buffRoutine()
 
     -- Target each member, check missing buffs, and build the queue
     for _, memberID in ipairs(groupMembers) do
-        if not (gui.botOn and gui.buffOn) then
+        if not (gui.botOn and gui.buffsOn) then
             debugPrint("DEBUG: Bot or Buff turned off during buff processing. Exiting buffRoutine.")
             return
         end
@@ -201,7 +201,7 @@ function buffer.buffRoutine()
     end
 
     -- Only run processBuffQueue if there are entries in buffer.buffQueue
-    if gui.botOn and gui.buffOn then
+    if gui.botOn and gui.buffsOn then
         if #buffer.buffQueue > 0 then
             buffer.processBuffQueue()
         else
@@ -214,8 +214,8 @@ function buffer.processBuffQueue()
     -- Define slots for each buff type
     local spellSlots = {
         IntWisBuff = 6,
-        ManaRegen = 7,
-        Haste = 8,
+        ManaRegenBuff = 7,
+        HasteBuff = 8,
         MagicResistBuff = 9,
         ACBuff = 10
     }
@@ -257,7 +257,7 @@ function buffer.processBuffQueue()
 
             while retries < retryLimit and not buffApplied do
                 -- Check if bot or buff is turned off during processing
-                if not (gui.botOn and gui.buffOn) then
+                if not (gui.botOn and gui.buffsOn) then
                     debugPrint("DEBUG: Bot or Buff turned off during processBuffQueue.")
                     return
                 end
@@ -295,7 +295,7 @@ function buffer.processBuffQueue()
                 local maxReadyAttempts = 20
                 local readyAttempt = 0
                 while not mq.TLO.Me.SpellReady(spell)() and readyAttempt < maxReadyAttempts do
-                    if not (gui.botOn and gui.buffOn) then
+                    if not (gui.botOn and gui.buffsOn) then
                         debugPrint("DEBUG: Bot or Buff setting turned off, exiting processBuffQueue.")
                         return
                     end
@@ -312,7 +312,7 @@ function buffer.processBuffQueue()
 
                 -- Check casting status
                 while mq.TLO.Me.Casting() do
-                    if mq.TLO.Target.Buff(spell)() or not (gui.botOn and gui.buffOn) then
+                    if mq.TLO.Target.Buff(spell)() or not (gui.botOn and gui.buffsOn) then
                         debugPrint("DEBUG: Buff applied or bot/buff turned off. Exiting processBuffQueue.")
                         mq.cmd('/stopcast')
                         break

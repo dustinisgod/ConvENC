@@ -10,7 +10,7 @@ utils.IsUsingCast = true
 utils.IsUsingMelee = false
 
 utils.mezConfig = {}
-local mezConfigPath = mq.configDir .. '/' .. 'ConvENC_mez_ignore_list.lua'
+local mezConfigPath = mq.configDir .. '/' .. 'Conv_mez_ignore_list.lua'
 
 local DEBUG_MODE = false
 -- Debug print helper function
