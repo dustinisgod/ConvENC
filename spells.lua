@@ -161,11 +161,11 @@ function spells.memorizeSpells(spells)
                 printf(string.format("Spell %s is already memorized in slot %d", spellName, slot))
             else
                 -- Clear the slot first to avoid conflicts
-                mq.cmdf('/mem "" %d', slot)
+                mq.cmdf('/memorize "" %d', slot)
                 mq.delay(500)  -- Short delay to allow the slot to clear
 
-                -- Issue the /mem command to memorize the spell in the slot
-                mq.cmdf('/mem "%s" %d', spellName, slot)
+                -- Issue the /memorize command to memorize the spell in the slot
+                mq.cmdf('/memorize "%s" %d', spellName, slot)
                 mq.delay(1000)  -- Initial delay to allow the memorization command to take effect
 
                 -- Loop to check if the spell is correctly memorized
@@ -204,7 +204,7 @@ function spells.loadAndMemorizeSpell(spellType, level, spellSlot)
     end
 
     -- Memorize the spell in the correct slot
-    mq.cmdf('/mem "%s" %d', bestSpell, spellSlot)
+    mq.cmdf('/memorize "%s" %d', bestSpell, spellSlot)
 
     -- Add a delay to wait for the spell to be memorized
     local maxAttempts = 10
