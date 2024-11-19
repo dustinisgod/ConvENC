@@ -58,8 +58,8 @@ local spells = {
 	HasteBuff = {
         {level = 60, name = "Visions of Grandeur"},
         {level = 58, name = "Wondrous Rapidity"},
-        {level = 47, name = "Swift Like the Wind"},
-		{level = 39, name = "Celerity"},
+        {level = 56, name = "Augment"},
+        {level = 53, name = "Aanya's Quickening"},
         {level = 28, name = "Augmentation"},
 		{level = 21, name = "Alacrity"},
 		{level = 15, name = "Quickness"}

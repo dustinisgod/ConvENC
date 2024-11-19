@@ -38,7 +38,7 @@ end
 local function findNearbyUnslowedMob()
     local assistRange = gui.assistRange
     local nearbyMobs = mq.getFilteredSpawns(function(spawn)
-        return spawn.Type() == "NPC" and spawn.Distance() <= assistRange
+        return spawn.Type() == "NPC" and spawn.Distance() <= assistRange and spawn.LineOfSight()
     end)
 
     for _, mob in ipairs(nearbyMobs) do
