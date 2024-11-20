@@ -306,6 +306,13 @@ local function controlGUI()
 
                 ImGui.Spacing()
 
+                if ImGui.Button("Force Buff Check") then
+                    local utils = require("utils")
+                    utils.nextBuffTime = 0
+                end
+
+                ImGui.Spacing()
+
                 gui.buffGroup = ImGui.Checkbox("Buff Group", gui.buffGroup or false)
                 if gui.buffGroup then
                     gui.buffRaid = false

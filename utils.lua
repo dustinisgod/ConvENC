@@ -66,7 +66,7 @@ local lastNavTime = 0
 
 function utils.monitorNav()
 
-    if gui.botOn and (gui.chaseOn or gui.returnToCamp) and not gui.pullOn then
+    if gui.botOn and (gui.chaseOn or gui.returnToCamp) then
         if not gui then
             printf("Error: gui is nil")
             return
@@ -89,6 +89,7 @@ function utils.monitorNav()
 end
 
 utils.nextBuffTime = 0  -- Global variable to track next scheduled time
+utils.nextSelfBuffTime = 0  -- Global variable to track next scheduled time
 
 function utils.monitorBuffs()
     if not gui or not gui.botOn or not gui.buffsOn then
@@ -97,13 +98,20 @@ function utils.monitorBuffs()
     end
 
     local buffer = require('buffer')
+    local selfbuffer = require('selfbuffer')
     local currentTime = os.time()
 
-    if (gui.intwisbuff or gui.manaRegen or gui.hastebuff or gui.magicresistbuff or gui.selfshield) and (currentTime >= utils.nextBuffTime) then
+    if (gui.intwisbuff or gui.manaRegen or gui.hastebuff or gui.magicresistbuff) and (currentTime >= utils.nextBuffTime) then
         if mq.TLO.Me.PctMana() > 20 then
             debugPrint("DEBUG: Running buff routine...")
             buffer.buffRoutine()
             utils.nextBuffTime = currentTime + 240  -- Schedule next run in 240 seconds
+        end
+    elseif gui.selfshield and (currentTime >= utils.nextSelfBuffTime) then
+        if mq.TLO.Me.PctMana() > 20 then
+            debugPrint("DEBUG: Running selfshield routine...")
+            selfbuffer.selfbuffRoutine()
+            utils.nextSelfBuffTime = currentTime + 240  -- Schedule next run in 240 seconds
         end
     end
 end

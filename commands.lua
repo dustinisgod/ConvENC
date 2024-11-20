@@ -5,7 +5,7 @@ local utils = require 'utils'
 
 local commands = {}
 
-local DEBUG_MODE = true
+local DEBUG_MODE = false
 -- Debug print helper function
 local function debugPrint(...)
     if DEBUG_MODE then

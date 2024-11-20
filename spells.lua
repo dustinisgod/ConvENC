@@ -1,6 +1,7 @@
 mq = require('mq')
 local gui = require('gui')
-local DEBUG_MODE = true
+
+local DEBUG_MODE = false
 -- Debug print helper function
 local function debugPrint(...)
     if DEBUG_MODE then

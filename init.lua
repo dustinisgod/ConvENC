@@ -37,10 +37,18 @@ commands.initALL()
 local startupRun = false
 local function checkBotOn(currentLevel)
     if gui.botOn and not startupRun then
-        -- Run the startup function once
+        nav.setCamp()
         spells.startup(currentLevel)
         startupRun = true  -- Set flag to prevent re-running
         printf("Bot has been turned on. Running spells.startup.")
+        local buffer = require('buffer')
+        local selfbuffer = require('selfbuffer')
+        if gui.buffsOn then
+            buffer.buffRoutine()
+        end
+        if gui.buffsOn and gui.selfshield then
+            selfbuffer.selfbuffRoutine()
+        end
     elseif not gui.botOn and startupRun then
         -- Optional: Reset the flag if bot is turned off
         startupRun = false
@@ -48,15 +56,14 @@ local function checkBotOn(currentLevel)
     end
 end
 
-local toggleboton = gui.botOn or false
-
+local toggleboton = false
 local function returnChaseToggle()
+    -- Check if bot is on and return-to-camp is enabled, and only set camp if toggleboton is false
     if gui.botOn and gui.returnToCamp and not toggleboton then
-        if nav.campLocation == nil then
-            nav.setCamp()
-            toggleboton = true
-        end
+        nav.setCamp()
+        toggleboton = true
     elseif not gui.botOn and toggleboton then
+        -- Clear camp if bot is turned off after being on
         nav.clearCamp()
         toggleboton = false
     end
@@ -65,12 +72,12 @@ end
 utils.loadMezConfig()
 
 while gui.controlGUI do
-    
-    checkBotOn(currentLevel)
-    
+
     returnChaseToggle()
 
     if gui.botOn then
+
+        checkBotOn(currentLevel)
 
         utils.monitorNav()
 
