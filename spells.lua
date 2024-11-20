@@ -48,14 +48,14 @@ local spells = {
         {level = 23, name = "Beguile"},
         {level = 11, name = "Charm"}
     },
-    ManaRegenBuff = {
+    manaregenbuff = {
         {level = 60, name = "Koadic's Endless Intellect"},
         {level = 56, name = "Gift of Pure Thought"},
 		{level = 42, name = "Boon of the Clear Mind"},
         {level = 26, name = "Clarity"},
         {level = 14, name = "Breeze"}
     },
-	HasteBuff = {
+	hastebuff = {
         {level = 60, name = "Visions of Grandeur"},
         {level = 58, name = "Wondrous Rapidity"},
         {level = 56, name = "Augment"},
@@ -64,17 +64,17 @@ local spells = {
 		{level = 21, name = "Alacrity"},
 		{level = 15, name = "Quickness"}
     },
-    MagicResistBuff = {
+    magicresistbuff = {
         {level = 48, name = "Group Resist Magic"},
         {level = 37, name = "Resist Magic"},
 		{level = 17, name = "Endure Magic"}
     },
-    IntWisBuff = {
+    intwisbuff = {
         {level = 57, name = "Enlightenment"},
         {level = 41, name = "Brilliance"},
         {level = 35, name = "Insight"}
     },
-	ACBuff = {
+	selfshield = {
 	    {level = 54, name = "Shield of the Magi"},
 	    {level = 40, name = "Arch Shielding"},
         {level = 31, name = "Greater Shielding"},
@@ -92,17 +92,17 @@ function spells.findBestSpell(spellType, charLevel)
         return nil -- Return nil if the spell type doesn't exist
     end
     -- Skip BuffHPOnly and BuffACOnly if cleric level is 58 or higher, as Aegolism line covers all three buffs
-    if charLevel == 60 and mq.TLO.Me.Book("Koadic's Endless Intellect")() and spellType == "IntWisBuff" then
+    if charLevel == 60 and mq.TLO.Me.Book("Koadic's Endless Intellect")() and spellType == "intwisbuff" then
         return nil
     end
-    if spellType == "ManaRegenBuff" and charLevel == 60 then
+    if spellType == "manaregenbuff" and charLevel == 60 then
         if mq.TLO.Me.Book("Koadic's Endless Intellect")() then
             return "Koadic's Endless Intellect"
         else
             return "Gift of Pure Thought"
         end
     end
-    if spellType == "HasteBuff" and charLevel == 60 then
+    if spellType == "hastebuff" and charLevel == 60 then
         if mq.TLO.Me.Book("Visions of Grandeur")() then
             return "Visions of Grandeur"
         else
@@ -134,20 +134,20 @@ function spells.loadDefaultSpells(charLevel)
     if gui.charmOn and charLevel >= 11 then
         defaultSpells[5] = spells.findBestSpell("Charm", charLevel)
     end
-    if gui.intWisBuff and charLevel >= 35 then
-        defaultSpells[6] = spells.findBestSpell("IntWisBuff", charLevel)
+    if gui.intwisbuff and charLevel >= 35 then
+        defaultSpells[6] = spells.findBestSpell("intwisbuff", charLevel)
     end
     if gui.manaRegen and charLevel >= 14 then
-        defaultSpells[7] = spells.findBestSpell("ManaRegenBuff", charLevel)
+        defaultSpells[7] = spells.findBestSpell("manaregenbuff", charLevel)
     end
-    if gui.hasteBuff and charLevel >= 15 then
-        defaultSpells[8] = spells.findBestSpell("HasteBuff", charLevel)
+    if gui.hastebuff and charLevel >= 15 then
+        defaultSpells[8] = spells.findBestSpell("hastebuff", charLevel)
     end
-    if gui.magicResistBuff and charLevel >= 17 then
-        defaultSpells[9] = spells.findBestSpell("MagicResistBuff", charLevel)
+    if gui.magicresistbuff and charLevel >= 17 then
+        defaultSpells[9] = spells.findBestSpell("magicresistbuff", charLevel)
     end
     if charLevel > 0 then
-        defaultSpells[10] = spells.findBestSpell("ACBuff", charLevel)
+        defaultSpells[10] = spells.findBestSpell("selfshield", charLevel)
     end
     return defaultSpells
 end

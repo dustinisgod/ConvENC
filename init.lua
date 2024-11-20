@@ -65,7 +65,7 @@ end
 utils.loadMezConfig()
 
 while gui.controlGUI do
-
+    
     checkBotOn(currentLevel)
     
     returnChaseToggle()

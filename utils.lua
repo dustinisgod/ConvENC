@@ -88,10 +88,10 @@ function utils.monitorNav()
     end
 end
 
-local lastBuffTime = 0
+utils.nextBuffTime = 0  -- Global variable to track next scheduled time
 
 function utils.monitorBuffs()
-    if not gui or not gui.botOn then
+    if not gui or not gui.botOn or not gui.buffsOn then
         debugPrint("DEBUG: Bot is off or gui is nil.")
         return
     end
@@ -99,16 +99,15 @@ function utils.monitorBuffs()
     local buffer = require('buffer')
     local currentTime = os.time()
 
-    -- Check if any buff is enabled and it's time for a buff routine
-    if (gui.intWisBuff or gui.manaRegen or gui.hasteBuff or gui.magicResistBuff) and (currentTime >= lastBuffTime + 240) then
+    if (gui.intwisbuff or gui.manaRegen or gui.hastebuff or gui.magicresistbuff or gui.selfshield) and (currentTime >= utils.nextBuffTime) then
         if mq.TLO.Me.PctMana() > 20 then
             debugPrint("DEBUG: Running buff routine...")
             buffer.buffRoutine()
-            -- Set lastBuffTime to the current time
-            lastBuffTime = currentTime
+            utils.nextBuffTime = currentTime + 240  -- Schedule next run in 240 seconds
         end
     end
 end
+
 
 function utils.sitMed()
     if not (gui.botOn and gui.sitMed) then return end

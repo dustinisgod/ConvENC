@@ -57,10 +57,10 @@ local function setSwitchWithMA(value) setToggleOption("switchWithMA", value, "Sw
 local function setBuffGroup(value) setToggleOption("buffGroup", value, "Buff Group") end
 local function setBuffRaid(value) setToggleOption("buffRaid", value, "Buff Raid") end
 local function setBuffs(value) setToggleOption("buffsOn", value, "Buffs") end
-local function setHasteBuff(value) setToggleOption("hasteBuff", value, "Haste Buff") end
-local function setManaRegenBuff(value) setToggleOption("manaRegenBuff", value, "Mana Regen Buff") end
-local function setIntWisBuff(value) setToggleOption("intWisBuff", value, "Int/Wis Buff") end
-local function setMagicResistBuff(value) setToggleOption("magicResistBuff", value, "Magic Resist Buff") end
+local function sethastebuff(value) setToggleOption("hastebuff", value, "Haste Buff") end
+local function setmanaregenbuff(value) setToggleOption("manaregenbuff", value, "Mana Regen Buff") end
+local function setintwisbuff(value) setToggleOption("intwisbuff", value, "Int/Wis Buff") end
+local function setmagicresistbuff(value) setToggleOption("magicresistbuff", value, "Magic Resist Buff") end
 local function setTash(value) setToggleOption("tashOn", value, "Tash") end
 local function setSlow(value) setToggleOption("slowOn", value, "Slow") end
 local function setCripple(value) setToggleOption("crippleOn", value, "Cripple") end
@@ -235,13 +235,13 @@ local function commandHandler(command, ...)
     elseif command == "buffraid" then
         setBuffRaid(args[1])
     elseif command == "haste" then
-        setHasteBuff(args[1])
+        sethastebuff(args[1])
     elseif command == "manaregen" then
-        setManaRegenBuff(args[1])
+        setmanaregenbuff(args[1])
     elseif command == "intwis" then
-        setIntWisBuff(args[1])
+        setintwisbuff(args[1])
     elseif command == "magicresist" then
-        setMagicResistBuff(args[1])
+        setmagicresistbuff(args[1])
     elseif command == "tash" then
         setTash(args[1])
     elseif command == "slow" then

@@ -39,10 +39,11 @@ local function setDefaultConfig()
     gui.buffsOn = false
     gui.buffGroup = false
     gui.buffRaid = false
-    gui.hasteBuff = false
-    gui.manaRegenBuff = false
-    gui.intWisBuff = false
-    gui.magicResistBuff = false
+    gui.hastebuff = false
+    gui.manaregenbuff = false
+    gui.intwisbuff = false
+    gui.magicresistbuff = false
+    gui.selfshield = false
     gui.sitMed = false
 end
 
@@ -289,6 +290,20 @@ local function controlGUI()
             gui.buffsOn = ImGui.Checkbox("Buffs", gui.buffsOn or false)
             if gui.buffsOn then
 
+                if gui.botOn then
+                    local utils = require("utils")
+                    local currentTime = os.time()
+                    local timeLeft = math.max(0, utils.nextBuffTime - currentTime)
+        
+                    if timeLeft > 0 then
+                        ImGui.Text(string.format("Buff Check In: %d seconds", timeLeft))
+                    else
+                        ImGui.Text("Buff Check Running.")
+                    end
+                else
+                    ImGui.Text("Bot is not active.")
+                end
+
                 ImGui.Spacing()
 
                 gui.buffGroup = ImGui.Checkbox("Buff Group", gui.buffGroup or false)
@@ -307,19 +322,23 @@ local function controlGUI()
                 ImGui.Separator()
                 ImGui.Spacing()
 
-                gui.hasteBuff = ImGui.Checkbox("Haste", gui.hasteBuff or false)
+                gui.hastebuff = ImGui.Checkbox("Haste", gui.hastebuff or false)
 
                 ImGui.Spacing()
 
-                gui.manaRegenBuff = ImGui.Checkbox("Mana Regen", gui.manaRegenBuff or false)
+                gui.manaregenbuff = ImGui.Checkbox("Mana Regen", gui.manaregenbuff or false)
 
                 ImGui.Spacing()
 
-                gui.intWisBuff = ImGui.Checkbox("Int/Wis", gui.intWisBuff or false)
+                gui.intwisbuff = ImGui.Checkbox("Int/Wis", gui.intwisbuff or false)
 
                 ImGui.Spacing()
 
-                gui.magicResistBuff = ImGui.Checkbox("Magic Resist", gui.magicResistBuff or false)
+                gui.magicresistbuff = ImGui.Checkbox("Magic Resist", gui.magicresistbuff or false)
+
+                ImGui.Spacing()
+
+                gui.selfshield = ImGui.Checkbox("Shield", gui.selfshield or false)
 
                 ImGui.Spacing()
 
