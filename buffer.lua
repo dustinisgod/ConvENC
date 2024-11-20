@@ -20,7 +20,7 @@ end
 -- Define which classes are eligible for each buff type
 local buffEligibleClasses = {
     ManaRegenBuff = {CLR = true, DRU = true, SHM = true, NEC = true, WIZ = true, MAG = true, SHD = true, ENC = true, BST = true, RNG = true, PAL = true},
-    hasteBuff = {WAR = true, MNK = true, ROG = true, PAL = true, SHD = true, BRD = true, BST = true, BER = true},
+    HasteBuff = {WAR = true, MNK = true, ROG = true, PAL = true, SHD = true, BRD = true, BST = true, BER = true},
     IntWisBuff = {CLR = true, DRU = true, SHM = true, NEC = true, WIZ = true, MAG = true, SHD = true, ENC = true, BST = true, RNG = true, PAL = true},
     MagicResistBuff = {ALL = true},
     ACBuff = {ALL = true}
