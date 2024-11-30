@@ -33,9 +33,18 @@ local function setDefaultConfig()
     gui.mezAmount = 2
     gui.mezRadius = 50
     gui.mezStopPercent = 95
-    gui.slowOn = false
     gui.tashOn = false
+    gui.tashNamedOnly = false
+    gui.tashRadius = 50
+    gui.tashStopPercent = 95
+    gui.slowOn = false
+    gui.slowNamedOnly = false
+    gui.slowRadius = 50
+    gui.slowStopPercent = 95
     gui.crippleOn = false
+    gui.crippleNamedOnly = false
+    gui.crippleRadius = 50
+    gui.crippleStopPercent = 95
     gui.buffsOn = false
     gui.buffGroup = false
     gui.buffRaid = false
@@ -265,25 +274,230 @@ local function controlGUI()
             end
         end
 
-        if ImGui.CollapsingHeader("DeBuff Settings") then
+        ImGui.Spacing()
 
-                ImGui.Spacing()
+        if ImGui.CollapsingHeader("Tash Settings:") then
 
-                gui.tashOn = ImGui.Checkbox("Tash", gui.tashOn or false)
-                if gui.tashOn then
-                    gui.mezTashOn = false
+            ImGui.Spacing()
+
+            gui.tashOn = ImGui.Checkbox("Tash", gui.tashOn or false)
+            if gui.tashOn then
+                gui.mezTashOn = false
+            end
+            ImGui.Spacing()
+            ImGui.Separator()
+            ImGui.Spacing()
+
+            if gui.tashOn then
+                -- Add Mob to Zone Ignore List Button
+                if ImGui.Button("+ Tash Zone Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.addMobToTashIgnoreList(targetName)  -- Add to the zone-specific ignore list
+                        print(string.format("'%s' has been added to the tash ignore list for the current zone.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to add it to the tash ignore list.")
+                    end
+                end
+
+                -- Remove Mob from Zone Ignore List Button
+                if ImGui.Button("- Tash Zone Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.removeMobFromTashIgnoreList(targetName)  -- Remove from the zone-specific ignore list
+                        print(string.format("'%s' has been removed from the tash ignore list for the current zone.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to remove it from the tash ignore list.")
+                    end
+                end
+
+                -- Add Mob to Global QuestNPC Ignore List Button
+                if ImGui.Button("+ Tash Global Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.addMobToTashIgnoreList(targetName, true)  -- Add to the global ignore list
+                        print(string.format("'%s' has been added to the global quest NPC ignore list.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to add it to the global quest NPC ignore list.")
+                    end
+                end
+
+                -- Remove Mob from Global QuestNPC Ignore List Button
+                if ImGui.Button("- Tash Global Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.removeMobFromTashIgnoreList(targetName, true)  -- Remove from the global ignore list
+                        print(string.format("'%s' has been removed from the global quest NPC ignore list.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to remove it from the global quest NPC ignore list.")
+                    end
                 end
 
                 ImGui.Spacing()
 
-                gui.slowOn = ImGui.Checkbox("Slow", gui.slowOn or false)
+                gui.tashNamedOnly = ImGui.Checkbox("Tash Named Only", gui.tashNamedOnly or false)
+                ImGui.Spacing()
+                ImGui.SetNextItemWidth(100)
+                gui.tashRadius = ImGui.SliderInt("Tash Radius", gui.tashRadius, 5, 100)
+                ImGui.Spacing()
+                ImGui.SetNextItemWidth(100)
+                gui.tashStopPercent = ImGui.SliderInt("Tash Stop %", gui.tashStopPercent, 1, 100)
 
                 ImGui.Spacing()
 
-                gui.crippleOn = ImGui.Checkbox("Cripple", gui.crippleOn or false)
+            end
+        end
+
+        if ImGui.CollapsingHeader("Slow Settings:") then
+
+            ImGui.Spacing()
+
+            gui.slowOn = ImGui.Checkbox("Slow", gui.slowOn or false)
+
+            ImGui.Spacing()
+            ImGui.Separator()
+            ImGui.Spacing()
+
+            if gui.slowOn then
+                -- Add Mob to Zone Ignore List Button
+                if ImGui.Button("+ Slow Zone Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.addMobToSlowIgnoreList(targetName)  -- Add to the zone-specific ignore list
+                        print(string.format("'%s' has been added to the slow ignore list for the current zone.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to add it to the slow ignore list.")
+                    end
+                end
+
+                -- Remove Mob from Zone Ignore List Button
+                if ImGui.Button("- Slow Zone Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.removeMobFromSlowIgnoreList(targetName)  -- Remove from the zone-specific ignore list
+                        print(string.format("'%s' has been removed from the slow ignore list for the current zone.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to remove it from the slow ignore list.")
+                    end
+                end
+
+                -- Add Mob to Global QuestNPC Ignore List Button
+                if ImGui.Button("+ Slow Global Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.addMobToSlowIgnoreList(targetName, true)  -- Add to the global ignore list
+                        print(string.format("'%s' has been added to the global quest NPC ignore list.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to add it to the global quest NPC ignore list.")
+                    end
+                end
+
+                -- Remove Mob from Global QuestNPC Ignore List Button
+                if ImGui.Button("- Slow Global Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.removeMobFromSlowIgnoreList(targetName, true)  -- Remove from the global ignore list
+                        print(string.format("'%s' has been removed from the global quest NPC ignore list.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to remove it from the global quest NPC ignore list.")
+                    end
+                end
 
                 ImGui.Spacing()
 
+                gui.slowNamedOnly = ImGui.Checkbox("Slow Named Only", gui.slowNamedOnly or false)
+                ImGui.Spacing()
+                ImGui.SetNextItemWidth(100)
+                gui.slowRadius = ImGui.SliderInt("Slow Radius", gui.slowRadius, 5, 100)
+                ImGui.Spacing()
+                ImGui.SetNextItemWidth(100)
+                gui.slowStopPercent = ImGui.SliderInt("Slow Stop %", gui.slowStopPercent, 1, 100)
+
+                ImGui.Spacing()
+
+            end
+        end
+
+        if ImGui.CollapsingHeader("Cripple Settings:") then
+
+            ImGui.Spacing()
+
+            gui.crippleOn = ImGui.Checkbox("Cripple", gui.crippleOn or false)
+
+            ImGui.Spacing()
+            ImGui.Separator()
+            ImGui.Spacing()
+
+            if gui.crippleOn then
+                -- Add Mob to Zone Ignore List Button
+                if ImGui.Button("+ Cripple Zone Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.addMobToCrippleIgnoreList(targetName)  -- Add to the zone-specific ignore list
+                        print(string.format("'%s' has been added to the cripple ignore list for the current zone.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to add it to the cripple ignore list.")
+                    end
+                end
+
+                -- Remove Mob from Zone Ignore List Button
+                if ImGui.Button("- Cripple Zone Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.removeMobFromCrippleIgnoreList(targetName)  -- Remove from the zone-specific ignore list
+                        print(string.format("'%s' has been removed from the cripple ignore list for the current zone.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to remove it from the cripple ignore list.")
+                    end
+                end
+
+                -- Add Mob to Global QuestNPC Ignore List Button
+                if ImGui.Button("+ Cripple Global Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.addMobToCrippleIgnoreList(targetName, true)  -- Add to the global ignore list
+                        print(string.format("'%s' has been added to the global quest NPC ignore list.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to add it to the global quest NPC ignore list.")
+                    end
+                end
+
+                -- Remove Mob from Global QuestNPC Ignore List Button
+                if ImGui.Button("- Cripple Global Ignore") then
+                    local utils = require("utils")
+                    local targetName = mq.TLO.Target.CleanName()
+                    if targetName then
+                        utils.removeMobFromCrippleIgnoreList(targetName, true)  -- Remove from the global ignore list
+                        print(string.format("'%s' has been removed from the global quest NPC ignore list.", targetName))
+                    else
+                        print("Error: No target selected. Please target a mob to remove it from the global quest NPC ignore list.")
+                    end
+                end
+
+                ImGui.Spacing()
+
+                gui.crippleNamedOnly = ImGui.Checkbox("Cripple Named Only", gui.crippleNamedOnly or false)
+                ImGui.Spacing()
+                ImGui.SetNextItemWidth(100)
+                gui.crippleRadius = ImGui.SliderInt("Cripple Radius", gui.crippleRadius, 5, 100)
+                ImGui.Spacing()
+                ImGui.SetNextItemWidth(100)
+                gui.crippleStopPercent = ImGui.SliderInt("Cripple Stop %", gui.crippleStopPercent, 1, 100)
+
+                ImGui.Spacing()
+
+            end
         end
 
         if ImGui.CollapsingHeader("Buff Settings") then

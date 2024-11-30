@@ -9,7 +9,13 @@ utils.IsUsingTwist = false
 utils.IsUsingCast = true
 utils.IsUsingMelee = false
 
+utils.tashConfig = {}
+utils.slowConfig = {}
+utils.crippleConfig = {}
 utils.mezConfig = {}
+local tashConfigPath = mq.configDir .. '/' .. 'Conv_Tash_ignore_list.lua'
+local slowConfigPath = mq.configDir .. '/' .. 'Conv_Slow_ignore_list.lua'
+local crippleConfigPath = mq.configDir .. '/' .. 'Conv_Cripple_ignore_list.lua'
 local mezConfigPath = mq.configDir .. '/' .. 'Conv_mez_ignore_list.lua'
 
 local DEBUG_MODE = false
@@ -266,6 +272,216 @@ function utils.saveMezConfig()
     end
     mq.pickle(mezConfigPath, config)
     print("Mez ignore list saved to " .. mezConfigPath)
+end
+
+-- Load the tash ignore list from the config file
+function utils.loadTashConfig()
+    local configData, err = loadfile(tashConfigPath)
+    if configData then
+        local config = configData() or {}
+        
+        -- Load each zone-specific list
+        for zone, mobs in pairs(config) do
+            utils.tashConfig[zone] = mobs
+        end
+        
+        -- Ensure the global ignore list is always loaded and initialized
+        utils.tashConfig.globalIgnoreList = utils.tashConfig.globalIgnoreList or {}
+        
+        print("Tash ignore list loaded from " .. tashConfigPath)
+    else
+        print("No tash ignore list found. Starting with an empty list.")
+        utils.tashConfig = {globalIgnoreList = {}}  -- Initialize with an empty global list
+    end
+end
+
+-- Function to add a mob to the tash ignore list using its clean name
+function utils.addMobToTashIgnoreList(targetName, isGlobal)
+    local zoneName = isGlobal and "globalIgnoreList" or mq.TLO.Zone.ShortName() or "UnknownZone"
+    
+    if targetName then
+        -- Ensure the zone or global list has an entry in the table
+        utils.tashConfig[zoneName] = utils.tashConfig[zoneName] or {}
+        
+        -- Add the mob's clean name to the appropriate ignore list if not already present
+        if not utils.tashConfig[zoneName][targetName] then
+            utils.tashConfig[zoneName][targetName] = true
+            print(string.format("Added '%s' to the tash ignore list for '%s'.", targetName, zoneName))
+            utils.saveTashConfig() -- Save the configuration after adding
+        else
+            print(string.format("'%s' is already in the tash ignore list for '%s'.", targetName, zoneName))
+        end
+    else
+        print("Error: No target selected. Please target a mob to add it to the tash ignore list.")
+    end
+end
+
+-- Function to remove a mob from the tash ignore list using its clean name
+function utils.removeMobFromTashIgnoreList(targetName, isGlobal)
+    local zoneName = isGlobal and "globalIgnoreList" or mq.TLO.Zone.ShortName() or "UnknownZone"
+    
+    if targetName then
+        -- Check if the zone or global entry exists in the ignore list
+        if utils.tashConfig[zoneName] and utils.tashConfig[zoneName][targetName] then
+            utils.tashConfig[zoneName][targetName] = nil  -- Remove the mob entry
+            print(string.format("Removed '%s' from the tash ignore list for '%s'.", targetName, zoneName))
+            utils.saveTashConfig()  -- Save the updated ignore list
+        else
+            print(string.format("'%s' is not in the tash ignore list for '%s'.", targetName, zoneName))
+        end
+    else
+        print("Error: No target selected. Please target a mob to remove it from the tash ignore list.")
+    end
+end
+
+-- Save the tash ignore list to the config file
+function utils.saveTashConfig()
+    local config = {}
+    for zone, mobs in pairs(utils.tashConfig) do
+        config[zone] = mobs
+    end
+    mq.pickle(tashConfigPath, config)
+    print("Tash ignore list saved to " .. tashConfigPath)
+end
+
+-- Load the slow ignore list from the config file
+function utils.loadSlowConfig()
+    local configData, err = loadfile(slowConfigPath)
+    if configData then
+        local config = configData() or {}
+        
+        -- Load each zone-specific list
+        for zone, mobs in pairs(config) do
+            utils.slowConfig[zone] = mobs
+        end
+        
+        -- Ensure the global ignore list is always loaded and initialized
+        utils.slowConfig.globalIgnoreList = utils.slowConfig.globalIgnoreList or {}
+        
+        print("Slow ignore list loaded from " .. slowConfigPath)
+    else
+        print("No slow ignore list found. Starting with an empty list.")
+        utils.slowConfig = {globalIgnoreList = {}}  -- Initialize with an empty global list
+    end
+end
+
+-- Function to add a mob to the slow ignore list using its clean name
+function utils.addMobToSlowIgnoreList(targetName, isGlobal)
+    local zoneName = isGlobal and "globalIgnoreList" or mq.TLO.Zone.ShortName() or "UnknownZone"
+    
+    if targetName then
+        -- Ensure the zone or global list has an entry in the table
+        utils.slowConfig[zoneName] = utils.slowConfig[zoneName] or {}
+        
+        -- Add the mob's clean name to the appropriate ignore list if not already present
+        if not utils.slowConfig[zoneName][targetName] then
+            utils.slowConfig[zoneName][targetName] = true
+            print(string.format("Added '%s' to the slow ignore list for '%s'.", targetName, zoneName))
+            utils.saveSlowConfig() -- Save the configuration after adding
+        else
+            print(string.format("'%s' is already in the slow ignore list for '%s'.", targetName, zoneName))
+        end
+    else
+        print("Error: No target selected. Please target a mob to add it to the slow ignore list.")
+    end
+end
+
+-- Function to remove a mob from the slow ignore list using its clean name
+function utils.removeMobFromSlowIgnoreList(targetName, isGlobal)
+    local zoneName = isGlobal and "globalIgnoreList" or mq.TLO.Zone.ShortName() or "UnknownZone"
+    
+    if targetName then
+        -- Check if the zone or global entry exists in the ignore list
+        if utils.slowConfig[zoneName] and utils.slowConfig[zoneName][targetName] then
+            utils.slowConfig[zoneName][targetName] = nil  -- Remove the mob entry
+            print(string.format("Removed '%s' from the slow ignore list for '%s'.", targetName, zoneName))
+            utils.saveSlowConfig()  -- Save the updated ignore list
+        else
+            print(string.format("'%s' is not in the slow ignore list for '%s'.", targetName, zoneName))
+        end
+    else
+        print("Error: No target selected. Please target a mob to remove it from the slow ignore list.")
+    end
+end
+
+-- Save the slow ignore list to the config file
+function utils.saveSlowConfig()
+    local config = {}
+    for zone, mobs in pairs(utils.slowConfig) do
+        config[zone] = mobs
+    end
+    mq.pickle(slowConfigPath, config)
+    print("Slow ignore list saved to " .. slowConfigPath)
+end
+
+-- Load the cripple ignore list from the config file
+function utils.loadCrippleConfig()
+    local configData, err = loadfile(crippleConfigPath)
+    if configData then
+        local config = configData() or {}
+        
+        -- Load each zone-specific list
+        for zone, mobs in pairs(config) do
+            utils.crippleConfig[zone] = mobs
+        end
+        
+        -- Ensure the global ignore list is always loaded and initialized
+        utils.crippleConfig.globalIgnoreList = utils.crippleConfig.globalIgnoreList or {}
+        
+        print("Cripple ignore list loaded from " .. crippleConfigPath)
+    else
+        print("No cripple ignore list found. Starting with an empty list.")
+        utils.crippleConfig = {globalIgnoreList = {}}  -- Initialize with an empty global list
+    end
+end
+
+-- Function to add a mob to the cripple ignore list using its clean name
+function utils.addMobToCrippleIgnoreList(targetName, isGlobal)
+    local zoneName = isGlobal and "globalIgnoreList" or mq.TLO.Zone.ShortName() or "UnknownZone"
+    
+    if targetName then
+        -- Ensure the zone or global list has an entry in the table
+        utils.crippleConfig[zoneName] = utils.crippleConfig[zoneName] or {}
+        
+        -- Add the mob's clean name to the appropriate ignore list if not already present
+        if not utils.crippleConfig[zoneName][targetName] then
+            utils.crippleConfig[zoneName][targetName] = true
+            print(string.format("Added '%s' to the cripple ignore list for '%s'.", targetName, zoneName))
+            utils.saveCrippleConfig() -- Save the configuration after adding
+        else
+            print(string.format("'%s' is already in the cripple ignore list for '%s'.", targetName, zoneName))
+        end
+    else
+        print("Error: No target selected. Please target a mob to add it to the cripple ignore list.")
+    end
+end
+
+-- Function to remove a mob from the cripple ignore list using its clean name
+function utils.removeMobFromCrippleIgnoreList(targetName, isGlobal)
+    local zoneName = isGlobal and "globalIgnoreList" or mq.TLO.Zone.ShortName() or "UnknownZone"
+    
+    if targetName then
+        -- Check if the zone or global entry exists in the ignore list
+        if utils.crippleConfig[zoneName] and utils.crippleConfig[zoneName][targetName] then
+            utils.crippleConfig[zoneName][targetName] = nil  -- Remove the mob entry
+            print(string.format("Removed '%s' from the cripple ignore list for '%s'.", targetName, zoneName))
+            utils.saveCrippleConfig()  -- Save the updated ignore list
+        else
+            print(string.format("'%s' is not in the cripple ignore list for '%s'.", targetName, zoneName))
+        end
+    else
+        print("Error: No target selected. Please target a mob to remove it from the cripple ignore list.")
+    end
+end
+
+-- Save the cripple ignore list to the config file
+function utils.saveCrippleConfig()
+    local config = {}
+    for zone, mobs in pairs(utils.crippleConfig) do
+        config[zone] = mobs
+    end
+    mq.pickle(crippleConfigPath, config)
+    print("Cripple ignore list saved to " .. crippleConfigPath)
 end
 
 return utils

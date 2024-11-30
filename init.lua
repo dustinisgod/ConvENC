@@ -70,6 +70,9 @@ local function returnChaseToggle()
 end
 
 utils.loadMezConfig()
+utils.loadTashConfig()
+utils.loadSlowConfig()
+utils.loadCrippleConfig()
 
 while gui.controlGUI do
 

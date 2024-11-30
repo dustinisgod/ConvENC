@@ -11,6 +11,7 @@ local notMezzableQueue = {}   -- Tracks unmezzable mobs due to level, repeated f
 local mezzedQueue = {}        -- Tracks mobs currently mezzed with sufficient duration and expiration
 
 local charLevel = mq.TLO.Me.Level()
+local currentZone = mq.TLO.Zone.ShortName()
 
 -- Constants
 local NOT_MEZZABLE_EXPIRATION = 30  -- Expiration duration in seconds for `notMezzableQueue` entries
@@ -135,8 +136,9 @@ function mez.mezRoutine()
             if mobLevel > maxMezLevel then
                 debugPrint("Mob is unmezzable due to level:", mobLevel)
                 notMezzableQueue[mobID] = os.time()
-            elseif utils.mezConfig[mq.TLO.Zone.ShortName()] and utils.mezConfig[mq.TLO.Zone.ShortName()][mobName] then
-                debugPrint("Mob is unmezzable due to configuration.")
+        -- Check maloConfig for the current zone and mob name or global ignore list
+            elseif (utils.mezConfig.globalIgnoreList and utils.mezConfig.globalIgnoreList[mobName]) or
+            (utils.mezConfig[currentZone] and utils.mezConfig[currentZone][mobName]) then
                 notMezzableQueue[mobID] = os.time()
             elseif shouldRemez(mobID) or not mezzedQueue[mobID] then
                 debugPrint("Mob is eligible for mezzing.")
@@ -171,7 +173,7 @@ function mez.mezRoutine()
             end
 
             -- Validate target distance and health before mezzing
-            if mq.TLO.Target() and mq.TLO.Target.Distance() > gui.mezRadius then
+            if mq.TLO.Target() and mq.TLO.Target.Distance() and mq.TLO.Target.Distance() > gui.mezRadius then
                 debugPrint("Target out of range! Distance:", mq.TLO.Target.Distance(), " Radius: ", gui.mezRadius)
                 break
             end
@@ -236,7 +238,6 @@ function mez.mezRoutine()
 
         -- Add to `notMezzableQueue` if mezzing attempts failed
         if not mezSuccessful then
-            print(string.format("Warning: Failed to mez mob ID %d after 2 attempts.", mobID))
             notMezzableQueue[mobID] = os.time()
             debugPrint("Adding mob ID to notMezzableQueue:", mobID)
         else
