@@ -187,6 +187,84 @@ local function setMezIgnore(scope, action)
     end
 end
 
+local function setTashIgnore(scope, action)
+    -- Check for a valid target name
+    local targetName = mq.TLO.Target.CleanName()
+    if not targetName then
+        print("Error: No target selected. Please target a mob to modify the tash ignore list.")
+        return
+    end
+
+    -- Determine if the scope is global or zone-specific
+    local isGlobal = (scope == "global")
+
+    if action == "add" then
+        utils.addMobToTashIgnoreList(targetName, isGlobal)
+        local scopeText = isGlobal and "global quest NPC ignore list" or "tash ignore list for the current zone"
+        print(string.format("'%s' has been added to the %s.", targetName, scopeText))
+
+    elseif action == "remove" then
+        utils.removeMobFromTashIgnoreList(targetName, isGlobal)
+        local scopeText = isGlobal and "global quest NPC ignore list" or "tash ignore list for the current zone"
+        print(string.format("'%s' has been removed from the %s.", targetName, scopeText))
+
+    else
+        print("Error: Invalid action. Usage: /convSHM tashignore zone/global add/remove")
+    end
+end
+
+local function setSlowIgnore(scope, action)
+    -- Check for a valid target name
+    local targetName = mq.TLO.Target.CleanName()
+    if not targetName then
+        print("Error: No target selected. Please target a mob to modify the slow ignore list.")
+        return
+    end
+
+    -- Determine if the scope is global or zone-specific
+    local isGlobal = (scope == "global")
+
+    if action == "add" then
+        utils.addMobToSlowIgnoreList(targetName, isGlobal)
+        local scopeText = isGlobal and "global quest NPC ignore list" or "slow ignore list for the current zone"
+        print(string.format("'%s' has been added to the %s.", targetName, scopeText))
+
+    elseif action == "remove" then
+        utils.removeMobFromSlowIgnoreList(targetName, isGlobal)
+        local scopeText = isGlobal and "global quest NPC ignore list" or "slow ignore list for the current zone"
+        print(string.format("'%s' has been removed from the %s.", targetName, scopeText))
+
+    else
+        print("Error: Invalid action. Usage: /convSHM slowignore zone/global add/remove")
+    end
+end
+
+local function setCrippleIgnore(scope, action)
+    -- Check for a valid target name
+    local targetName = mq.TLO.Target.CleanName()
+    if not targetName then
+        print("Error: No target selected. Please target a mob to modify the cripple ignore list.")
+        return
+    end
+
+    -- Determine if the scope is global or zone-specific
+    local isGlobal = (scope == "global")
+
+    if action == "add" then
+        utils.addMobToCrippleIgnoreList(targetName, isGlobal)
+        local scopeText = isGlobal and "global quest NPC ignore list" or "cripple ignore list for the current zone"
+        print(string.format("'%s' has been added to the %s.", targetName, scopeText))
+
+    elseif action == "remove" then
+        utils.removeMobFromCrippleIgnoreList(targetName, isGlobal)
+        local scopeText = isGlobal and "global quest NPC ignore list" or "cripple ignore list for the current zone"
+        print(string.format("'%s' has been removed from the %s.", targetName, scopeText))
+
+    else
+        print("Error: Invalid action. Usage: /convSHM crippleignore zone/global add/remove")
+    end
+end
+
 
 local function commandHandler(command, ...)
     -- Convert command and arguments to lowercase for case-insensitive matching
@@ -226,6 +304,12 @@ local function commandHandler(command, ...)
         setMezAmount(args[1])
     elseif command == "mezignore" then
         setMezIgnore(args[1], args[2])
+    elseif command == "tashignore" then
+        setTashIgnore(args[1], args[2])
+    elseif command == "slowignore" then
+        setSlowIgnore(args[1], args[2])
+    elseif command == "crippleignore" then
+        setCrippleIgnore(args[1], args[2])
     elseif command == "sitmed" then
         setSitMedOnOff(args[1])
     elseif command == "buffs" then
