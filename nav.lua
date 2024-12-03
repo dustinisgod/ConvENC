@@ -1,15 +1,16 @@
 local mq = require('mq')
 local gui = require('gui')
 
-local nav = {}
-
 local DEBUG_MODE = false
+
 -- Debug print helper function
 local function debugPrint(...)
     if DEBUG_MODE then
         print(...)
     end
 end
+
+local nav = {}
 
 nav.campLocation = nil
 
@@ -19,7 +20,7 @@ function nav.setCamp()
         x = mq.TLO.Me.X() or 0,
         y = mq.TLO.Me.Y() or 0,
         z = mq.TLO.Me.Z() or 0,
-        zone = mq.TLO.Zone.ShortName() or "Unknown"
+        zone = mq.TLO.Zone.ShortName()
     }
     print(string.format("Camp location set at your current position in zone %s.", nav.campLocation.zone))
 end
@@ -32,23 +33,30 @@ end
 -- Function to check distance from camp and return if out of range
 function nav.checkCampDistance()
     if gui.botOn then
-        if gui.returnToCamp and nav.campLocation then
+        debugPrint("checkcamp bot on.")
+        if gui.returntocamp and nav.campLocation then
+            debugPrint("returntocamp and camplocation.")
             -- Check if the character is in the same zone as the camp location
             if mq.TLO.Zone.ShortName() ~= nav.campLocation.zone then
-                print("Current zone does not match camp zone. Aborting return to camp.")
+                debugPrint("Character is not in the same zone as the camp location.")
                 return
             end
 
             -- Retrieve current position
             local currentX = mq.TLO.Me.X() or 0
             local currentY = mq.TLO.Me.Y() or 0
+            local currentZ = mq.TLO.Me.Z() or 0
+            debugPrint(string.format("Current position: %f, %f, %f", currentX, currentY, currentZ))
 
             -- Calculate distance to camp using the distance formula
-            local distance = math.sqrt((nav.campLocation.x - currentX)^2 + (nav.campLocation.y - currentY)^2)
+            local xyDistance = math.sqrt((nav.campLocation.x - currentX)^2 + (nav.campLocation.y - currentY)^2)
+            local zDistance = math.abs(nav.campLocation.z - currentZ)
+            debugPrint(string.format("Distance to camp: %f, %f", xyDistance, zDistance))
             
             -- Check if distance exceeds the camp radius (campDistance)
-            if distance > (gui.campDistance or 50) and mq.TLO.Stick() == "OFF" then
-                mq.cmdf('/nav locyx %f %f distance=5', nav.campLocation.y, nav.campLocation.x)
+            if xyDistance > (gui.campDistance or 20) or zDistance > 20 and not mq.TLO.Me.Casting() and not mq.TLO.Stick() then
+                debugPrint("Returning to camp.")
+                mq.cmdf('/nav locyxz %f %f %f distance=5', nav.campLocation.y, nav.campLocation.x, nav.campLocation.z)
             
                 local startTime = os.time()  -- Record the start time for timeout
                 while mq.TLO.Me.Moving() do
@@ -64,6 +72,7 @@ function nav.checkCampDistance()
             end
         end
     else
+        debugPrint("checkcamp bot off.")
         return
     end
 end
@@ -105,8 +114,8 @@ function nav.setChaseTargetAndDistance(targetName, distance)
         if targetSpawn and targetSpawn() and targetSpawn.Type() == 'PC' and mq.TLO.Navigation.PathExists("id " .. targetSpawn.ID())() then
             gui.chaseTarget = targetName
             gui.chaseDistance = distance
-            gui.returnToCamp = false  -- Disable Return to Camp
-            gui.chaseOn = true  -- Check Chase in the GUI
+            gui.returntocamp = false  -- Disable Return to Camp
+            gui.chaseon = true  -- Check Chase in the GUI
             print(string.format("Chasing %s within %d units.", gui.chaseTarget, gui.chaseDistance))
         else
             print("Error: Invalid target or no navigable path exists to the target.")
