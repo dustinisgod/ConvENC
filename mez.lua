@@ -50,8 +50,8 @@ local function mezTashRoutine(mobID)
         mq.cmdf("/cast %d", 1)
         mq.delay(100)
 
-        while mq.TLO.Me.Casting() do
-            if mq.TLO.Target.Tashed() then
+        while mq.TLO.Target() and mq.TLO.Me.Casting() do
+            if mq.TLO.Target() and mq.TLO.Target.Tashed() then
                 debugPrint("DEBUG: Tash successfully applied to mob - ID:", mobID)
                 mq.delay(100)
                 break
@@ -59,7 +59,7 @@ local function mezTashRoutine(mobID)
             mq.delay(10)
         end
 
-        if mq.TLO.Target.Tashed() then
+        if mq.TLO.Target() and mq.TLO.Target.Tashed() then
             debugPrint("DEBUG: Tash successfully applied to mob - ID:", mobID)
             mq.delay(100)
             return true
@@ -166,7 +166,7 @@ function mez.mezRoutine()
                 return
             end
 
-            if mq.TLO.Target.ID() ~= mobID then
+            if mq.TLO.Target() and mq.TLO.Target.ID() ~= mobID then
                 debugPrint("Targeting mob ID:", mobID)
                 mq.cmdf("/squelch /target id %d", mobID)
                 mq.delay(500)
@@ -189,7 +189,7 @@ function mez.mezRoutine()
             end
 
             -- Attempt to cast mez
-            if not mq.TLO.Target.Mezzed() or (mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() < MEZ_RECHECK_THRESHOLD) then
+            if mq.TLO.Target() and not mq.TLO.Target.Mezzed() or (mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() < MEZ_RECHECK_THRESHOLD) then
 
                 mq.cmdf("/squelch /cast 2")
                 debugPrint("Casting mez spell gem 2")
@@ -204,11 +204,11 @@ function mez.mezRoutine()
                         break
                     end
 
-                    if mq.TLO.Target.ID() ~= mobID or mq.TLO.Target.Distance() > gui.mezRadius or mq.TLO.Target.PctHPs() < gui.mezStopPercent then
+                    if mq.TLO.Target() and mq.TLO.Target.ID() ~= mobID or mq.TLO.Target.Distance() > gui.mezRadius or mq.TLO.Target.PctHPs() < gui.mezStopPercent then
                         mq.cmd("/squelch /stopcast")
                         debugPrint("Casting interrupted: Range: " .. mq.TLO.Target.Distance() .. " HP%: " .. mq.TLO.Target.PctHPs())
                         break
-                    elseif mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() > MEZ_RECHECK_THRESHOLD then
+                    elseif mq.TLO.Target() and mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() > MEZ_RECHECK_THRESHOLD then
                         mq.cmd("/squelch /stopcast")
                         updateMezStatus(mobID, mq.TLO.Target.Mezzed.Duration() / 1000)
                         mezSuccessful = true
@@ -221,14 +221,14 @@ function mez.mezRoutine()
 
                 mq.delay(100)
 
-                if mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() > MEZ_RECHECK_THRESHOLD then
+                if mq.TLO.Target() and mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() > MEZ_RECHECK_THRESHOLD then
                 updateMezStatus(mobID, mq.TLO.Target.Mezzed.Duration() / 1000)
                 debugPrint("Mez successful on second check.")
                 mezSuccessful = true
                 break
                 end
 
-            elseif mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() > MEZ_RECHECK_THRESHOLD then
+            elseif mq.TLO.Target() and mq.TLO.Target.Mezzed() and mq.TLO.Target.Mezzed.Duration() > MEZ_RECHECK_THRESHOLD then
                 updateMezStatus(mobID, mq.TLO.Target.Mezzed.Duration() / 1000)
                 debugPrint("Mez successful on second check.")
                 mezSuccessful = true
