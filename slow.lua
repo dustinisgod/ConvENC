@@ -65,7 +65,7 @@ local function findNearbyUnslowedMob()
         mq.cmdf("/target id %d", mobID)
         mq.delay(100, function() return mq.TLO.Target.ID() == mobID end)
 
-        if mq.TLO.Target.ID() == mobID and not mq.TLO.Target.Slowed() and not isSlowedRecently(mobID) then
+        if mq.TLO.Target() and mobID and mq.TLO.Target.ID() == mobID and not mq.TLO.Target.Slowed() and not isSlowedRecently(mobID) then
             debugPrint("DEBUG: Found unslowed mob:", mobName)
             return mob
         end
@@ -91,9 +91,9 @@ function slow.slowRoutine()
                 return
             end
 
-            if mq.TLO.Me.Gem(3)() ~= slowSpell then
-                spells.loadAndMemorizeSpell("Slow", charLevel, 3)
-                debugPrint("DEBUG: Loaded Slow spell in slot 3")
+            if mq.TLO.Me.Gem(1)() ~= slowSpell then
+                spells.loadAndMemorizeSpell("Slow", charLevel, 1)
+                debugPrint("DEBUG: Loaded Slow spell in slot 1")
             end
 
             local readyAttempt = 0
@@ -107,22 +107,22 @@ function slow.slowRoutine()
             mq.cmdf("/cast %s", slowSpell)
             mq.delay(100)
 
-            while mq.TLO.Me.Casting() do
-                if mq.TLO.Target.Slowed() then
+            while mq.TLO.Target() and mq.TLO.Me.Casting() do
+                if mq.TLO.Target() and mq.TLO.Target.Slowed() then
                     debugPrint("DEBUG: Slow successfully applied to mob - ID:", mobID)
                     addToQueue(mobID)
                     mq.delay(100)
                     break
                 end
-                if mq.TLO.Target.PctHPs() < gui.slowStopPercent and not mq.TLO.Target.Named() then
-                    debugPrint("DEBUG: Stopping cast: target HP above 95%")
+                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= gui.slowStopPercent and not mq.TLO.Target.Named() then
+                    debugPrint("DEBUG: Stopping cast: target HP above: ", gui.slowStopPercent)
                     mq.cmd('/stopcast')
                     break
                 end
                 mq.delay(10)
             end
 
-            if mq.TLO.Target.Slowed() then
+            if mq.TLO.Target() and mq.TLO.Target.Slowed() then
                 addToQueue(mobID)
                 return true
             end

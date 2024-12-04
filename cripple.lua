@@ -19,7 +19,7 @@ local crippleDuration = 30 -- Duration in seconds to keep a mob in the queue
 local charLevel = mq.TLO.Me.Level()
 debugPrint("DEBUG: Character level:", charLevel)
 
-local function isCrippleedRecently(mobID)
+local function isCrippledRecently(mobID)
     local entry = crippleQueue[mobID]
     if entry then
         local elapsed = os.time() - entry
@@ -65,7 +65,7 @@ local function findNearbyUncrippledMob()
         mq.cmdf("/target id %d", mobID)
         mq.delay(100, function() return mq.TLO.Target.ID() == mobID end)
 
-        if mq.TLO.Target.ID() == mobID and not mq.TLO.Target.Crippled() and not isCrippleedRecently(mobID) then
+        if mq.TLO.Target() and mobID and mq.TLO.Target.ID() == mobID and not mq.TLO.Target.Crippled() and not isCrippledRecently(mobID) then
             debugPrint("DEBUG: Found uncrippled mob:", mobName)
             return mob
         end
@@ -79,7 +79,7 @@ end
 
 function cripple.crippleRoutine()
 
-    if gui.botOn and gui.crippleOn and charLevel >= 12 then
+    if gui.botOn and gui.crippleOn and charLevel >= 18 then
 
         local crippleSpell = spells.findBestSpell("Cripple", charLevel)
         local mob = findNearbyUncrippledMob()
@@ -91,9 +91,9 @@ function cripple.crippleRoutine()
                 return
             end
 
-            if mq.TLO.Me.Gem(4)() ~= crippleSpell then
-                spells.loadAndMemorizeSpell("Cripple", charLevel, 4)
-                debugPrint("DEBUG: Loaded Cripple spell in slot 4")
+            if mq.TLO.Me.Gem(1)() ~= crippleSpell then
+                spells.loadAndMemorizeSpell("Cripple", charLevel, 1)
+                debugPrint("DEBUG: Loaded Cripple spell in slot 1")
             end
 
             local readyAttempt = 0
@@ -107,22 +107,22 @@ function cripple.crippleRoutine()
             mq.cmdf("/cast %s", crippleSpell)
             mq.delay(100)
 
-            while mq.TLO.Me.Casting() do
-                if mq.TLO.Target.Crippled() then
+            while mq.TLO.Target() and mq.TLO.Me.Casting() do
+                if mq.TLO.Target() and mq.TLO.Target.Crippled() then
                     debugPrint("DEBUG: Cripple successfully applied to mob - ID:", mobID)
                     addToQueue(mobID)
                     mq.delay(100)
                     break
                 end
-                if mq.TLO.Target.PctHPs() < gui.crippleStopPercent and not mq.TLO.Target.Named() then
-                    debugPrint("DEBUG: Stopping cast: target HP above 95%")
+                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= gui.crippleStopPercent and not mq.TLO.Target.Named() then
+                    debugPrint("DEBUG: Stopping cast: target HP above: ", gui.crippleStopPercent)
                     mq.cmd('/stopcast')
                     break
                 end
                 mq.delay(10)
             end
 
-            if mq.TLO.Target.Crippled() then
+            if mq.TLO.Target() and mq.TLO.Target.Crippled() then
                 addToQueue(mobID)
                 return true
             end

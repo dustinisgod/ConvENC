@@ -65,7 +65,7 @@ local function findNearbyUntashedMob()
         mq.cmdf("/target id %d", mobID)
         mq.delay(100, function() return mq.TLO.Target.ID() == mobID end)
 
-        if mq.TLO.Target.ID() == mobID and not mq.TLO.Target.Tashed() and not isTashedRecently(mobID) then
+        if mq.TLO.Target() and mobID and mq.TLO.Target.ID() == mobID and not mq.TLO.Target.Tashed() and not isTashedRecently(mobID) then
             debugPrint("DEBUG: Found untashed mob:", mobName)
             return mob
         end
@@ -107,22 +107,22 @@ function tash.tashRoutine()
             mq.cmdf("/cast %s", tashSpell)
             mq.delay(100)
 
-            while mq.TLO.Me.Casting() do
+            while mq.TLO.Target() and mq.TLO.Me.Casting() do
                 if mq.TLO.Target() and mq.TLO.Target.Tashed() then
                     debugPrint("DEBUG: Tash successfully applied to mob - ID:", mobID)
                     addToQueue(mobID)
                     mq.delay(100)
                     break
                 end
-                if mq.TLO.Target() and mq.TLO.Target.PctHPs() < gui.tashStopPercent and not mq.TLO.Target.Named() then
-                    debugPrint("DEBUG: Stopping cast: target HP above 95%")
+                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= gui.tashStopPercent and not mq.TLO.Target.Named() then
+                    debugPrint("DEBUG: Stopping cast: target HP above: ", gui.tashStopPercent)
                     mq.cmd('/stopcast')
                     break
                 end
                 mq.delay(10)
             end
 
-            if mq.TLO.Target.Tashed() then
+            if mq.TLO.Target() and mq.TLO.Target.Tashed() then
                 addToQueue(mobID)
                 return true
             end
