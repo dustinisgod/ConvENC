@@ -37,10 +37,10 @@ local function addToQueue(mobID)
 end
 
 local function findNearbyUntashedMob()
-    local assistRange = gui.assistRange
+    local tashradius = gui.tashRadius
     local currentZone = mq.TLO.Zone.ShortName()
     local nearbyMobs = mq.getFilteredSpawns(function(spawn)
-        return spawn.Type() == "NPC" and spawn.Distance() <= assistRange and spawn.LineOfSight() and (not gui.tashNamedOnly or spawn.Named())
+        return spawn.Type() == "NPC" and spawn.Distance() <= tashradius and spawn.LineOfSight() and (not gui.tashNamedOnly or spawn.Named())
     end)
 
     if not nearbyMobs or #nearbyMobs == 0 then
@@ -114,7 +114,7 @@ function tash.tashRoutine()
                     mq.delay(100)
                     break
                 end
-                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= gui.tashStopPercent and not mq.TLO.Target.Named() then
+                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= (gui.tashStopPercent or 20) and not mq.TLO.Target.Named() then
                     debugPrint("DEBUG: Stopping cast: target HP above: ", gui.tashStopPercent)
                     mq.cmd('/stopcast')
                     break

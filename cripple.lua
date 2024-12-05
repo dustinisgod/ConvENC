@@ -37,10 +37,10 @@ local function addToQueue(mobID)
 end
 
 local function findNearbyUncrippledMob()
-    local assistRange = gui.assistRange
+    local crippleradius = gui.crippleRadius
     local currentZone = mq.TLO.Zone.ShortName()
     local nearbyMobs = mq.getFilteredSpawns(function(spawn)
-        return spawn.Type() == "NPC" and spawn.Distance() <= assistRange and spawn.LineOfSight() and (not gui.crippleNamedOnly or spawn.Named())
+        return spawn.Type() == "NPC" and spawn.Distance() <= crippleradius and spawn.LineOfSight() and (not gui.crippleNamedOnly or spawn.Named())
     end)
 
     if not nearbyMobs or #nearbyMobs == 0 then
@@ -114,7 +114,7 @@ function cripple.crippleRoutine()
                     mq.delay(100)
                     break
                 end
-                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= gui.crippleStopPercent and not mq.TLO.Target.Named() then
+                if mq.TLO.Target() and mq.TLO.Target.PctHPs() and mq.TLO.Target.PctHPs() <= (gui.crippleStopPercent or 20) and not mq.TLO.Target.Named() then
                     debugPrint("DEBUG: Stopping cast: target HP above: ", gui.crippleStopPercent)
                     mq.cmd('/stopcast')
                     break
