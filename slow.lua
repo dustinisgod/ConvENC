@@ -103,9 +103,11 @@ function slow.slowRoutine()
                 mq.delay(500)
             end
 
-            debugPrint("DEBUG: Casting Slow on mob - ID:", mobID)
-            mq.cmdf("/cast %s", slowSpell)
-            mq.delay(100)
+            if mq.TLO.Target() and mq.TLO.Target.LineOfSight() and not mq.TLO.Target.Slowed() then
+                debugPrint("DEBUG: Casting Slow on mob - ID:", mobID)
+                mq.cmdf("/cast %s", slowSpell)
+                mq.delay(100)
+            end
 
             while mq.TLO.Target() and mq.TLO.Me.Casting() do
                 if mq.TLO.Target() and mq.TLO.Target.Slowed() then

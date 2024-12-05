@@ -103,9 +103,11 @@ function cripple.crippleRoutine()
                 mq.delay(500)
             end
 
-            debugPrint("DEBUG: Casting Cripple on mob - ID:", mobID)
-            mq.cmdf("/cast %s", crippleSpell)
-            mq.delay(100)
+            if mq.TLO.Target() and mq.TLO.Target.LineOfSight() and not mq.TLO.Target.Crippled() then
+                debugPrint("DEBUG: Casting Cripple on mob - ID:", mobID)
+                mq.cmdf("/cast %s", crippleSpell)
+                mq.delay(100)
+            end
 
             while mq.TLO.Target() and mq.TLO.Me.Casting() do
                 if mq.TLO.Target() and mq.TLO.Target.Crippled() then
