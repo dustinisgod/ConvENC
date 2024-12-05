@@ -54,8 +54,8 @@ function nav.checkCampDistance()
             debugPrint(string.format("Distance to camp: %f, %f", xyDistance, zDistance))
             
             -- Check if distance exceeds the camp radius (campDistance)
-            if xyDistance > (gui.campDistance or 20) or zDistance > 20 and not mq.TLO.Me.Casting() and not mq.TLO.Stick() then
-                debugPrint("Returning to camp.")
+            if xyDistance > (gui.campDistance or 20) or zDistance > 20 and not mq.TLO.Me.Casting() and not mq.TLO.Stick.Active() then
+                debugPrint("Returning to camp.", mq.TLO.Stick())
                 mq.cmdf('/nav locyxz %f %f %f distance=5', nav.campLocation.y, nav.campLocation.x, nav.campLocation.z)
             
                 local startTime = os.time()  -- Record the start time for timeout
