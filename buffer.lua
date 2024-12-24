@@ -129,12 +129,14 @@ function buffer.buffRoutine()
     local groupMembers = {}
 
     if gui.buffGroup then
-        for i = 0, mq.TLO.Group.Members() - 1 do -- Start from 0 to include the player
+        -- Loop through all members, including self (member 0)
+        local groupSize = mq.TLO.Group.Members() or 0
+    
+        for i = 0, groupSize do -- Start from 0 to include self
             local member = mq.TLO.Group.Member(i)
             local memberID = member and member.ID()
     
-            -- Check for valid group members (including self as group member 0)
-            if memberID and memberID > 0 and not member.Dead() then
+            if memberID and memberID > 0 and not (member.Dead() or false) then
                 table.insert(groupMembers, memberID)
                 debugPrint("DEBUG: Added group member with ID:", memberID)
             else
